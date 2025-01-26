@@ -1,6 +1,3 @@
-
-
-
 import requests
 import re
 from bs4 import BeautifulSoup
@@ -9,9 +6,6 @@ import time
 import smtplib
 from email.message import EmailMessage
 from datetime import datetime
-
-# Get the current time
-
 
 # Configurações do servidor de e-mail
 SMTP_SERVER = "smtp.gmail.com"  # Servidor SMTP do Gmail
@@ -32,36 +26,28 @@ def send_email(to_email, subject, body):
         # Conexão com o servidor SMTP
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
             smtp.starttls()  # Inicia comunicação segura
-            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)  # Faz login no servidor
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)  # Faz login no servidor SMTP
             smtp.send_message(msg)  # Envia o e-mail
-            print(f"E-mail enviado para {to_email} com sucesso!")
+        print("E-mail enviado com sucesso!")
     except Exception as e:
         print(f"Erro ao enviar e-mail: {e}")
 
-
+# Função para obter o conteúdo da página
 def get_page_content(url):
     response = requests.get(url)
-    response.raise_for_status()  # Garante que não houve erro na requisição
+    response.raise_for_status()  # Levanta um erro se a requisição falhar
     return response.text
 
-# URL da página
-URL3 = "https://gems.usf.edu:4440/psc/gemspro-tam/EMPLOYEE/HRMS/c/HRS_HRAM_FL.HRS_CG_SEARCH_FL.GBL?Page=HRS_APP_SCHJOB_FL&Action=U"
-
-# Faz a requisição
-response = requests.get(URL3)
-soup = BeautifulSoup(response.text, "html.parser")
-
-# Localiza o elemento pelo seletor (substitua pela classe ou ID real)
-
-   
-def monitor_page(URL3, interval):
-    print(f"Monitorando alterações na página: {URL3}")
+# Função para monitorar a página
+def monitor_page(url, interval=10):
     last_numbers = None
+    MAX_RUNTIME = 5 * 60  # Tempo máximo de execução em segundos (5 minutos)
+    start_time = time.time()
 
     while True:
         try:
             # Obtém o conteúdo atualizado da página
-            content = get_page_content(URL3)
+            content = get_page_content(url)
             soup = BeautifulSoup(content, "html.parser")  # Atualiza o BeautifulSoup com o novo conteúdo
             
             # Localiza o elemento desejado
@@ -87,13 +73,20 @@ def monitor_page(URL3, interval):
                 last_numbers = numbers
             else:
                 print("Elemento não encontrado na página.")
+        
+            # Aguarda antes de verificar novamente
+            time.sleep(interval)
+            
+            # Verifica se o tempo máximo de execução foi atingido
+            if time.time() - start_time > MAX_RUNTIME:
+                print("Tempo máximo de execução atingido. Encerrando o script.")
+                break
 
         except Exception as e:
             print(f"Erro ao monitorar a página: {e}")
-        
-        # Aguarda antes de verificar novamente
-        time.sleep(interval)
+
+# URL da página a ser monitorada
+URL3 = "https://gems.usf.edu:4440/psc/gemspro-tam/EMPLOYEE/HRMS/c/HRS_HRAM_FL.HRS_CG_SEARCH_FL.GBL?Page=HRS_APP_SCHJOB_FL&Action=U"  # Substitua pela URL real
 
 # Chamada da função com intervalo de 10 segundos
 monitor_page(URL3, interval=10)
-
