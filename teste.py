@@ -53,7 +53,7 @@ soup = BeautifulSoup(response.text, "html.parser")
 
 # Localiza o elemento pelo seletor (substitua pela classe ou ID real)
 
-
+   
 def monitor_page(URL3, interval):
     print(f"Monitorando alterações na página: {URL3}")
     last_numbers = None
