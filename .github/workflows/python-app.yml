@@ -27,4 +27,4 @@ jobs:
 
       - name: Run script
         run: |
-          python VerificaPostDoc/teste.py
+          python teste.py
