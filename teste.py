@@ -41,7 +41,7 @@ def get_page_content(url):
 # Função para monitorar a página
 def monitor_page(url, interval=10):
     last_numbers = None
-    MAX_RUNTIME = 5 * 60  # Tempo máximo de execução em segundos (5 minutos)
+    MAX_RUNTIME = 15 * 60  # Tempo máximo de execução em segundos (5 minutos)
     start_time = time.time()
 
     while True:
@@ -86,7 +86,7 @@ def monitor_page(url, interval=10):
             print(f"Erro ao monitorar a página: {e}")
 
 # URL da página a ser monitorada
-URL3 = "https://gems.usf.edu:4440/psc/gemspro-tam/EMPLOYEE/HRMS/c/HRS_HRAM_FL.HRS_CG_SEARCH_FL.GBL?Page=HRS_APP_SCHJOB_FL&Action=U"  # Substitua pela URL real
+URL = "https://gems.usf.edu:4440/psc/gemspro-tam/EMPLOYEE/HRMS/c/HRS_HRAM_FL.HRS_CG_SEARCH_FL.GBL?Page=HRS_APP_SCHJOB_FL&Action=U"  # Substitua pela URL real
 
 # Chamada da função com intervalo de 10 segundos
-monitor_page(URL3, interval=10)
+monitor_page(URL, interval=10)
